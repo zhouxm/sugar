@@ -741,22 +741,31 @@ name: structuredstreamingquickstart
   ### - QuickStart
 ]
 .right-column[
-a scalable and fault-tolerant stream processing engine built on the **Spark SQL** engine
-  - express streaming computation as same as batch process on static data
-  - express streaming aggregations, event-time windows, stream batch joins, etc in Scala, Java, Python or R
-  - end-to-end exactly-once fault-tolerance guarantees(checkpointing & Write Ahead Logs)
+### A simple case: Network Word Count
+```scala
+import org.apache.spark.sql.SparkSession
 
-<img style="zoom: 0.9" src="imgs/sparkonrdd.png"> <img style="zoom: 0.9" src="imgs/sparkonsql.png">
-- Spark 1.x
-  - SparkContext/RDD API based
-  - SQLContext/HiveContext/StreamingContext
-- Spark 2.x
-  - Dataset/DataFrame API based
-  - SparkSession
+object WordCount extends App {
+  val spark = SparkSession
+    .builder()
+    .appName("StructuredNetworkWordCount")
+    .getOrCreate()
+  import spark.implicits._
 
-**one stack to rule them all**
-
-
+  val lines = spark.readStream
+    .format("socket")
+    .option("host", "localhost")
+    .option("port", 9999)
+    .load()
+  val words = lines.as[String].flatMap(_.split(" "))
+  val wordCounts = words.groupBy("value").count()
+  val query = wordCounts.writeStream
+    .outputMode("complete")
+    .format("console")
+    .start()
+  query.awaitTermination()
+}
+```
 
 ]
 ---
