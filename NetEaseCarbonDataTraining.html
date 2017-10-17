@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>NetEase Spark Training</title>
+    <title>NetEase CarbonData Training</title>
     <meta charset="utf-8">
     <style>
       @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
@@ -119,7 +119,7 @@
 
 class: center, middle, inverse
 
-# NetEase Spark Training
+# NetEase CarbonData Training
 ### [Kent Yao]
 
 ???
@@ -135,7 +135,7 @@ name: agenda
 ]
 
 .right-column[
-#### What is RDD?
+#### What is CarbonData?
 #### What is Spark?
 #### Spark Programming Guide
 ]
@@ -143,53 +143,56 @@ name: agenda
 ---
 
 class:
-name: whatisrddoverview
+name: whatiscarbon
 .left-column[
-  ## What is RDD?
+  ## What is CarbonData?
   ### - Overview
 ]
 
 .right-column[
-- In-memory
-  - efficient fault tolerance
-- Handle inefficiently
-  - iterative algorithms
-  - interactive data mining tools
-- Read-only
-  - provides a restricted form of shared memory
-  - shared state: coarse-grained transformations(√) fine-grained updates(×).
-- A system
-  - Spark
+Apache CarbonData is an indexed columnar data format for fast analytics on big data platform, e.g.Apache Hadoop, Apache Spark, etc.
+
+<img style="zoom: 0.35" src="./imgs/CDfullyIndexing.png" />
+
 ]
 
 ???
-RDD设计背景
-在实际应用中，存在许多迭代式算法（比如机器学习、图算法等）和交互式数据挖掘工具，这些应用场景的共同之处是，不同计算阶段之间会重用中间结果，即一个阶段的输出结果会作为下一个阶段的输入。但是，目前的MapReduce框架都是把中间结果写入到HDFS中，带来了大量的数据复制、磁盘IO和序列化开销。虽然，类似Pregel等图计算框架也是将结果保存在内存当中，但是，这些框架只能支持一些特定的计算模式，并没有提供一种通用的数据抽象。RDD就是为了满足这种需求而出现的，它提供了一个抽象的数据架构，我们不必担心底层数据的分布式特性，只需将具体的应用逻辑表达为一系列转换处理，不同RDD之间的转换操作形成依赖关系，可以实现管道化，从而避免了中间结果的存储，大大降低了数据复制、磁盘IO和序列化开销。
 
 ---
 
 class:
-name: whatisrddabstraction
+name: whatiscarbonfeatures
 .left-column[
-  ## What is RDD?
+  ## What is CarbonData?
   ### - Overview
-  ### - Abstraction
+  ### - Features
 ]
 
 .right-column[
-A Resilient Distributed Dataset (RDD), the basic abstraction in Spark. Represents an immutable, partitioned collection of elements that can be operated on in parallel
-- Internally, each RDD is characterized by five main properties:
-  - A list of partitions
-  - A function for computing each split
-  - A list of dependencies on other RDDs
-  - Optionally, a Partitioner for key-value RDDs (e.g. to say that the RDD is hash-partitioned)
-  - Optionally, a list of preferred locations to compute each split on (e.g. block locations for an HDFS file)
+CarbonData file format is a columnar store in HDFS, it has many features as a modern columnar format
+
+### common features
+- splittable
+- compression schema
+- complex data type
+- etc
+
+### unique features:
+
+- Stores data along with index
+  - reduces the I/O scans and CPU resources
+  - index skip scan (blocklet)
+- Operable encoded data
+  - efficient compression
+  - global encoding schemes
+  - late materialized
+- Supports for various use cases with one single Data format
+  - interactive OLAP-style query
+  - Sequential Access (big scan)
+  - Random Access (narrow scan)
 ]
 
 ???
-
-一个RDD就是一个分布式对象集合，本质上是一个只读的分区记录集合，
-每个RDD可以分成多个分区，每个分区就是一个数据集片段，并且一个RDD的不同分区可以被保存到集群中不同的节点上，从而可以在集群中的不同节点上进行并行计算。RDD提供了一种高度受限的共享内存模型，即RDD是只读的记录分区的集合，不能直接修改，只能基于稳定的物理存储中的数据集来创建RDD，或者通过在其他RDD上执行确定的转换操作（如map、join和groupBy）而创建得到新的RDD。
 
 ---
 
@@ -652,10 +655,8 @@ name: sparkprogramingguide
 
 .left-column[
   ## Spark Programming Guide
-  ### - Terminology
-  ### - Spark Shell
-  ### - Spark Submit
-  ### - What's More
+
+
 ]
 .right-column[
   .center.middle[
@@ -663,28 +664,6 @@ name: sparkprogramingguide
   Click [Spark Programing Guide](http://spark.apache.org/docs/2.1.0/programming-guide.html) to see more advantage usages of RDDs.
   ]
 ]
-
----
-
-class:
-name: sparksqldataset
-
-.left-column[
-  ## Spark SQL
-  ### Dataset/DataFrame
-]
-.right-column[
-
-    <img style="zoom: 1.0" src="imgs/rdd.png" />
-]
-
-???
-
-Spark 1.x的RDD更多意义上是一个一维、只有行概念的数据集，比如 RDD[Person]，那么一行就是一个Person，存在内存里也是把 Person 作为一个整体（序列化前的java object，或序列化后的bytes）。
-
-Spark 2.x里，一个 Person 的 Dataset 或 DataFrame，是二维行+列的数据集，比如一行一个 Person，有 name:String, age:Int, height:Double 三列；在内存里的物理结构，也会显式区分列边界。
-Dataset/DataFrame 在 API 使用上有区别：Dataset 相比 DataFrame 而言是 type-safe 的，能够在编译时对 AnalysisExecption 报错（如下图示例）:
-Dataset/DataFrame 存储方式无区别：两者在内存中的存储方式是完全一样的、是按照二维行列（UnsafeRow）来存的，所以在没必要区分 Dataset 或 DataFrame 在 API 层面的差别时，我们统一写作 Dataset/DataFrame
 
 ---
 
@@ -699,66 +678,6 @@ name: sparksql
 <img style="zoom: 0.40" src="imgs/sparksqlcatalyst.png" />
 ]
 
----
-
-class:
-name: structuredstreaming
-.left-column[
-  ## Structured Streaming
-  ### - Overview
-
-]
-.right-column[
-a scalable and fault-tolerant stream processing engine built on the **Spark SQL** engine
-  - express streaming computation as same as batch process on static data
-  - express streaming aggregations, event-time windows, stream batch joins, etc in Scala, Java, Python or R
-  - end-to-end exactly-once fault-tolerance guarantees(checkpointing & Write Ahead Logs)
-
-<img style="zoom: 0.9" src="imgs/sparkonrdd.png"> <img style="zoom: 0.9" src="imgs/sparkonsql.png">
-- Spark 1.x
-  - SparkContext/RDD API based
-  - SQLContext/HiveContext/StreamingContext
-- Spark 2.x
-  - Dataset/DataFrame API based
-  - SparkSession
-
-**one stack to rule them all**
-]
-
-???
-
-Spark 1.x 时代里，以 SparkContext（及 RDD API）为基础，在 structured data 场景衍生出了 SQLContext, HiveContext，在 streaming 场景衍生出了StreamingContext，很是琳琅满目。
-
-Spark 2.x 则咔咔咔精简到只保留一个 SparkSession 作为主程序入口，以 Dataset/DataFrame 为主要的用户 API，同时满足 structured data, streaming data, machine learning, graph 等应用场景，大大减少使用者需要学习的内容，爽爽地又重新实现了一把当年的 "one stack to rule them all" 的理想。
-
----
-
-class:
-name: structuredstreamingquickstart
-.left-column[
-  ## Structured Streaming
-  ### - Overview
-  ### - QuickStart
-]
-.right-column[
-a scalable and fault-tolerant stream processing engine built on the **Spark SQL** engine
-  - express streaming computation as same as batch process on static data
-  - express streaming aggregations, event-time windows, stream batch joins, etc in Scala, Java, Python or R
-  - end-to-end exactly-once fault-tolerance guarantees(checkpointing & Write Ahead Logs)
-
-<img style="zoom: 0.9" src="imgs/sparkonrdd.png"> <img style="zoom: 0.9" src="imgs/sparkonsql.png">
-- Spark 1.x
-  - SparkContext/RDD API based
-  - SQLContext/HiveContext/StreamingContext
-- Spark 2.x
-  - Dataset/DataFrame API based
-  - SparkSession
-
-**one stack to rule them all**
-
-
-
-]
 ---
 
 class: middle, center, inverse
