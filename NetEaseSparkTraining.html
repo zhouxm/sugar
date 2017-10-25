@@ -58,7 +58,7 @@
         text-shadow: 0 0 20px #333;
       }
       .inverse h1, .inverse h2 {
-        color: #f3f3f3;
+        color: #fff;
         line-height: 0.8em;
       }
 
@@ -112,6 +112,25 @@
         float: right;
         padding-top: 1em;
       }
+
+      /* Two-column layout inverse*/
+      .left-column-inverse {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+      }
+      .left-column-inverse h2:last-of-type, .left-column-inverse h3:last-of-type {
+        color: #fff;
+      }
+      .right-column-inverse {
+        width: 75%;
+        float: right;
+        padding-top: 1em;
+      }
+      .right-column-inverse h2, .right-column-inverse h3, .right-column-inverse h4 {
+        color: #fff;
+      }
     </style>
   </head>
   <body>
@@ -130,14 +149,15 @@ class: center, middle, inverse
 class: inverse
 name: agenda
 
-.left-column[
+.left-column-inverse[
   # Agenda
+  ### Spark Core
 ]
 
-.right-column[
-#### What is RDD?
-#### What is Spark?
-#### Spark Programming Guide
+.right-column-inverse[
+### What is RDD?
+### What is Spark?
+### Spark Programming Guide
 ]
 
 ---
@@ -146,7 +166,7 @@ class:
 name: whatisrddoverview
 .left-column[
   ## What is RDD?
-  ### - Overview
+  ### Overview
 ]
 
 .right-column[
@@ -172,8 +192,8 @@ class:
 name: whatisrddabstraction
 .left-column[
   ## What is RDD?
-  ### - Overview
-  ### - Abstraction
+  ### Overview
+  ### Abstraction
 ]
 
 .right-column[
@@ -198,9 +218,9 @@ name: whatisrddlimitations
 
 .left-column[
   ## What is RDD?
-  ### - Overview
-  ### - Abstraction
-  ### - Operations
+  ### Overview
+  ### Abstraction
+  ### Operations
 ]
 
 .right-column[
@@ -231,10 +251,10 @@ name: whatisrddlineage
 
 .left-column[
   ## What is RDD?
-  ### - Overview
-  ### - Abstraction
-  ### - Operations
-  ### - Lineage
+  ### Overview
+  ### Abstraction
+  ### Operations
+  ### Lineage
 ]
 
 .right-column[
@@ -273,11 +293,11 @@ name: whatisrdddependencies
 
 .left-column[
   ## What is RDD?
-  ### - Overview
-  ### - Abstraction
-  ### - Operations
-  ### - Lineage
-  ### - Dependencies
+  ### Overview
+  ### Abstraction
+  ### Operations
+  ### Lineage
+  ### Dependencies
 ]
 
 .right-column[
@@ -311,12 +331,12 @@ name: whatisrddderddtojob
 
 .left-column[
   ## What is RDD?
-  ### - Overview
-  ### - Abstraction
-  ### - Operations
-  ### - Lineage
-  ### - Dependencies
-  ### - Job Scheduling
+  ### Overview
+  ### Abstraction
+  ### Operations
+  ### Lineage
+  ### Dependencies
+  ### Job Scheduling
 ]
 
 .right-column[
@@ -340,7 +360,7 @@ name: whatisspark
 
 .left-column[
   ## What is Spark?
-  ### - Overview
+  ### Overview
 ]
 .right-column[
 
@@ -367,8 +387,8 @@ name:sparkarchitecture
 
 .left-column[
   ## What is Spark?
-  ### - Overview
-  ### - Architecture
+  ### Overview
+  ### Architecture
 ]
 .right-column[
   ![](./imgs/spark-stack.png)
@@ -390,9 +410,9 @@ name:clusteroverview
 
 .left-column[
   ## What is Spark?
-  ### - Overview
-  ### - Architecture
-  ### - Components
+  ### Overview
+  ### Architecture
+  ### Components
 ]
 .right-column[
   .bottom[![](./imgs/cluster-overview.png)]
@@ -418,10 +438,10 @@ name:whatissparksparkcontext
 
 .left-column[
   ## What is Spark?
-  ### - Overview
-  ### - Architecture
-  ### - Components
-  ### - SparkContext
+  ### Overview
+  ### Architecture
+  ### Components
+  ### SparkContext
 ]
 .right-column[
 - the entrance / the heart / the master of a Spark APP
@@ -436,7 +456,7 @@ name: sparkprogramingguide
 
 .left-column[
   ## Spark Programming Guide
-  ### - Terminology
+  ### Terminology
 ]
 
 .right-column[
@@ -466,8 +486,8 @@ name:sparkprogramingguidesparkshell
 
 .left-column[
   ## Spark Programming Guide
-  ### - Terminology
-  ### - Spark Shell
+  ### Terminology
+  ### Spark Shell
 ]
 .right-column[
 #### - The launch code
@@ -504,9 +524,9 @@ name:sparkprogramingguidesparksubmit1
 
 .left-column[
   ## Spark Programming Guide
-  ### - Terminology
-  ### - Spark Shell
-  ### - Spark Submit
+  ### Terminology
+  ### Spark Shell
+  ### Spark Submit
 ]
 .right-column[
 #### Self-Contained Word Count App
@@ -534,9 +554,9 @@ name:sparkprogramingguidesparksubmit2
 
 .left-column[
   ## Spark Programming Guide
-  ### - Terminology
-  ### - Spark Shell
-  ### - Spark Submit
+  ### Terminology
+  ### Spark Shell
+  ### Spark Submit
 ]
 .right-column[
 #### Self-Contained Word Count App
@@ -578,9 +598,9 @@ name:sparkprogramingguidesparksubmit3
 
 .left-column[
   ## Spark Programming Guide
-  ### - Terminology
-  ### - Spark Shell
-  ### - Spark Submit
+  ### Terminology
+  ### Spark Shell
+  ### Spark Submit
 ]
 .right-column[
 #### Self-Contained Word Count App
@@ -618,9 +638,9 @@ name:sparkprogramingguidesparksubmit4
 
 .left-column[
   ## Spark Programming Guide
-  ### - Terminology
-  ### - Spark Shell
-  ### - Spark Submit
+  ### Terminology
+  ### Spark Shell
+  ### Spark Submit
 ]
 .right-column[
 #### Self-Contained Word Count App
@@ -652,10 +672,10 @@ name: sparkprogramingguide
 
 .left-column[
   ## Spark Programming Guide
-  ### - Terminology
-  ### - Spark Shell
-  ### - Spark Submit
-  ### - What's More
+  ### Terminology
+  ### Spark Shell
+  ### Spark Submit
+  ### What's More
 ]
 .right-column[
   .center.middle[
@@ -688,6 +708,22 @@ Dataset/DataFrame 存储方式无区别：两者在内存中的存储方式是�
 
 ---
 
+class: inverse
+name: agenda
+
+.left-column-inverse[
+  # Agenda
+  ### Spark Core
+  ### Spark SQL
+]
+
+.right-column-inverse[
+#### What is Spark SQL?
+#### Spark SQL Programming Guide
+]
+
+---
+
 class:
 name: sparksql
 
@@ -705,7 +741,7 @@ class:
 name: structuredstreaming
 .left-column[
   ## Structured Streaming
-  ### - Overview
+  ### Overview
 
 ]
 .right-column[
@@ -734,11 +770,38 @@ Spark 2.x 则咔咔咔精简到只保留一个 SparkSession 作为主程序入�
 ---
 
 class:
+name:structuredstreamingprogramingmodelexample
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ##### Fault Tolerance Semantics
+]
+.right-column[
+### Fault Tolerance Semantics
+Delivering **end-to-end exactly-once** semantics was one of key goals behind the design of Structured Streaming
+
+                   +-----------------------------------------------+
+                   |    offset tracking in WAL                     |
+                   |              +                     end-2-end  |
+                   |       state management        =   exactly-once|
+                   |              +                     guarantees |
+                   | fault+torrent sources & sinks                 |
+                   +-----------------------------------------------+
+Structured Streaming sources, the sinks and the execution engine reliably track the exact progress of the processing so that it can handle any kind of failure by **restarting** and/or **reprocessing**.
+  - **replayable sources** is assumed to have offsets (similar to Kafka offsets, or Kinesis sequence numbers) to track the read position in the stream.
+  - The engine uses **checkpointing** and **write ahead logs** to record the offset range of the data being processed in each trigger.
+  - **idempotent sinks** for handling reprocessing
+]
+
+---
+
+class:
 name: structuredstreamingquickstart
 .left-column[
   ## Structured Streaming
-  ### - Overview
-  ### - QuickStart
+  ### Overview
+  ### QuickStart
 ]
 .right-column[
 ### A simple case: Network Word Count
@@ -780,14 +843,37 @@ Structured Streaming 也是先纯定义、再触发执行的模式，即
     这个过程叫做 continous query（持续查询）
 
 ---
+
+class:
+name:structuredstreamingprogramingmodelexample
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### QuickStart
+
+]
+.right-column[
+### Quick Example
+<img src="imgs/structured-streaming-example-model.png" style="zoom:0.45">
+
+In this model, Spark is responsible for updating the Result Table when there is new data, thus relieving the users from reasoning about fault-tolerance, and data consistency(at-least-once, or at-most-once, or exactly-once)
+]
+
+???
+
+Spark Streaming 时代有过非官方的 event time 支持尝试，而在进化后的 Structured Streaming 里，添加了对 event time 的原生支持。
+
+---
+
 class:
 name:structuredstreamingprogramingmodel
 
 .left-column[
   ## Structured Streaming
-  ### - Overview
-  ### - QuickStart
-  ### - Programming Model
+  ### Overview
+  ### QuickStart
+  ### Programming Model
 ]
 .right-column[
 ### unbounded input table
@@ -808,10 +894,10 @@ name:structuredstreamingprogramingmodelbasic
 
 .left-column[
   ## Structured Streaming
-  ### - Overview
-  ### - QuickStart
-  ### - Programming Model
-  ##### - Basic Concepts
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ##### Basic Concepts
 ]
 .right-column[
 ### Input Table
@@ -826,10 +912,10 @@ class:
 name:structuredstreamingprogramingbasic2
 .left-column[
   ## Structured Streaming
-  ### - Overview
-  ### - QuickStart
-  ### - Programming Model
-  ##### - Basic Concepts
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ##### Basic Concepts
 ]
 .right-column[
 ### Result Table
@@ -843,10 +929,10 @@ name:structuredstreamingprogramingmodelbasic3
 
 .left-column[
   ## Structured Streaming
-  ### - Overview
-  ### - QuickStart
-  ### - Programming Model
-  ##### - Basic Concepts
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ##### Basic Concepts
 ]
 
 .right-column[
@@ -870,66 +956,154 @@ name:structuredstreamingprogramingmodelexample
 
 .left-column[
   ## Structured Streaming
-  ### - Overview
-  ### - QuickStart
-  ### - Programming Model
-  ##### - Basic Concepts
-
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ### Dataset/DataFrame
 ]
 .right-column[
-### Quick Example
-<img src="imgs/structured-streaming-example-model.png" style="zoom:0.45">
+### Creating streaming DataFrames and streaming Datasets
+Since Spark 2.0, DataFrames and Datasets can represent static, bounded data, as well as streaming, unbounded data
 
-In this model, Spark is responsible for updating the Result Table when there is new data, thus relieving the users from reasoning about fault-tolerance, and data consistency(at-least-once, or at-most-once, or exactly-once)
+Streaming DataFrames can be created through the `DataStreamReader` interface ([Scala](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.streaming.DataStreamReader)/[Java](http://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/streaming/DataStreamReader.html)/[Python](http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.streaming.DataStreamReader) docs) returned by `SparkSession.readStream()`
+
+
 ]
 
 ---
-
-class:
-name:structuredstreamingprogramingmodelexample
 
 .left-column[
   ## Structured Streaming
-  ### - Overview
-  ### - QuickStart
-  ### - Programming Model
-  ##### - Basic Concepts
-  ##### - Handling Event-time and Late Data
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ### Dataset/DataFrame
+  #### Input Sources
 ]
 .right-column[
-### Quick Example
-<img src="imgs/structured-streaming-example-model.png" style="zoom:0.45">
+### a few built-in sources
 
-In this model, Spark is responsible for updating the Result Table when there is new data, thus relieving the users from reasoning about fault-tolerance, and data consistency(at-least-once, or at-most-once, or exactly-once)
+|Source| Fault-tolerant |Notes|
+| :---: | :---: | --- |
+|**File      ** | Yes |Reads files written in a directory as a stream of data. Supported file formats are text, csv, json, parquet.**Does not support multiple comma-separated paths/globs.**|
+|**Kafka      **| Yes|Poll data from Kafka. It’s compatible with Kafka broker versions 0.10.0 or higher. See the [Kafka Integration Guide](http://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html) for more details. |
+|**Socket      **| No | Reads UTF8 text data from a socket connection|
+
 ]
-
 ---
-
-class:
-name:structuredstreamingprogramingmodelexample
 
 .left-column[
   ## Structured Streaming
-  ### - Overview
-  ### - QuickStart
-  ### - Programming Model
-  ##### - Basic Concepts
-  ##### - Handling Event-time and Late Data
-  ##### - Fault Tolerance Semantics
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ### Dataset/DataFrame
+  #### Input Sources
+  #### Schema inference and partition discovery
 ]
 .right-column[
-### Fault Tolerance Semantics
-Delivering **end-to-end exactly-once** semantics was one of key goals behind the design of Structured Streaming
+### Schema inference
 
-<img src="imgs/exactly-only-once.png" style="zoom:0.30">
+ - specify the schema, **NOT** rely on Spark to infer it automatically.
+ - This restriction ensures a consistent schema will be used for the streaming query, even in the case of failures.
+ - For ad-hoc use cases, you can reenable schema inference by setting spark.sql.streaming.schemaInference to true.
 
- Structured Streaming sources, the sinks and the execution engine reliably track the exact progress of the processing so that it can handle any kind of failure by **restarting** and/or **reprocessing**.
-  - **replayable sources** is assumed to have offsets (similar to Kafka offsets, or Kinesis sequence numbers) to track the read position in the stream.
-  - The engine uses **checkpointing** and **write ahead logs** to record the offset range of the data being processed in each trigger.
-  - **idempotent sinks** for handling reprocessing
+### Partition discovery
+
+- `/key=value/`
+- must be present
+- must remain static.
+- OK: /data/year=2016/ when /data/year=2015/ was present,
+- NOT OK: /data/date=2016-04-17/.
+]
+---
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ### Dataset/DataFrame
+  ### Event Time
+]
+.right-column[
+### Window Operations on Event Time
+
+<img src="imgs/structured-streaming-window.png" style="zoom: 0.5">
+]
+
+???
+
+我们有一系列 arriving 的 records
+首先是一个对着时间列 timestamp 做长度为10m，滑动为5m 的 window() 操作
+例如上图右上角的虚框部分，当达到一条记录 12:22|dog 时，会将 12:22 归入两个窗口 12:15-12:25、12:20-12:30，所以产生两条记录：12:15-12:25|dog、12:20-12:30|dog，对于记录 12:24|dog owl 同理产生两条记录：12:15-12:25|dog owl、12:20-12:30|dog owl
+所以这里 window() 操作的本质是 explode()，可由一条数据产生多条数据
+然后对 window() 操作的结果，以 window 列和 word 列为 key，做 groupBy().count() 操作
+这个操作的聚合过程是增量的（借助 StateStore）
+最后得到一个有 window, word, count 三列的状态集
+
+
+
+---
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ### Dataset/DataFrame
+  ### Event Time
+]
+.right-column[
+```scala
+package com.netease.mammut.spark.training.streaming
+
+import java.sql.Timestamp
+
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions._
+
+object TimeBasedWordCount {
+  def main(args: Array[String]): Unit = {
+    val spark = SparkSession.builder()
+      .appName("TimeBasedWordCount")
+      .getOrCreate()
+    import spark.implicits._
+    val lines = spark.readStream
+      .format("socket")
+      .option("host", "localhost")
+      .option("port", 9999)
+      .load()
+*   val timeWords = lines.as[String].flatMap(_.split(" "))
+*     .map(TimeBasedWord(new Timestamp(System.currentTimeMillis()), _))
+*   val windowedCounts = timeWords.groupBy(
+*     window($"timestamp", "10 minutes", "5 minutes"),
+*     $"word").count()
+    val query = windowedCounts.writeStream
+      .outputMode("complete")
+      .format("console")
+      .start()
+    query.awaitTermination()
+  }
+}
+
+case class TimeBasedWord(timestamp: Timestamp, word: String)
+```
 ]
 
 ---
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ### Dataset/DataFrame
+  ### Event Time
+  ### Handling Late Data
+]
+
+---
+
 
 class: middle, center, inverse
 name: greetings
@@ -937,7 +1111,6 @@ name: greetings
 ### [Kent Yao]
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.
-
 
 
     </textarea>
