@@ -5,7 +5,7 @@ import java.sql.Timestamp
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 
-object TimeBasedWordCount {
+object WatermarkWordCount {
   def main(args: Array[String]): Unit = {
     val spark = SparkSession.builder()
       .appName("TimeBasedWordCount")
@@ -18,13 +18,22 @@ object TimeBasedWordCount {
       .load()
     val timeWords = lines.as[String]
       .flatMap(_.split(" "))
-      .map(TimeBasedWord(new Timestamp(System.currentTimeMillis()), _))
+      .map { word =>
+        if (word == "late") {
+          TimeBasedWord(new Timestamp(System.currentTimeMillis() - 20 * 60 * 1000L), word)
+        } else if (word == "delay") {
+          TimeBasedWord(new Timestamp(System.currentTimeMillis() - 7 * 60 * 1000L), word)
+        } else {
+          TimeBasedWord(new Timestamp(System.currentTimeMillis()), word)
+        }
+      }
     val windowedCounts = timeWords
+      .withWatermark("timestamp", "10 minutes")
       .groupBy(window($"timestamp", "10 minutes", "5 minutes"),
         $"word"
       ).count()
     val query = windowedCounts.writeStream
-      .outputMode("complete")
+      .outputMode("update")
       .format("console")
       .start()
     query.awaitTermination()

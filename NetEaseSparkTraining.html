@@ -146,6 +146,22 @@ class: center, middle, inverse
 
 ---
 
+class: inverse, center
+name: agenda
+
+
+  # Agenda
+  ### Spark Core
+  ### Spark SQL
+  ### Spark Streaming
+  ### Structured Streaming
+  ### Machine Learning
+  ### GrahpX
+  ### Configuration
+  ### Tuning
+
+---
+
 class: inverse
 name: agenda
 
@@ -685,6 +701,21 @@ name: sparkprogramingguide
 ]
 
 ---
+class: inverse
+name: agenda
+
+.left-column-inverse[
+  # Agenda
+  ### Spark Core
+  ### Spark SQL
+]
+
+.right-column-inverse[
+#### What is Spark SQL?
+#### Spark SQL Programming Guide
+]
+
+---
 
 class:
 name: sparksqldataset
@@ -708,22 +739,6 @@ Dataset/DataFrame 存储方式无区别：两者在内存中的存储方式是�
 
 ---
 
-class: inverse
-name: agenda
-
-.left-column-inverse[
-  # Agenda
-  ### Spark Core
-  ### Spark SQL
-]
-
-.right-column-inverse[
-#### What is Spark SQL?
-#### Spark SQL Programming Guide
-]
-
----
-
 class:
 name: sparksql
 
@@ -734,6 +749,42 @@ name: sparksql
 .right-column[
 <img style="zoom: 0.40" src="imgs/sparksqlcatalyst.png" />
 ]
+
+---
+
+class: inverse
+name: agenda
+
+.left-column-inverse[
+  # Agenda
+  ### Spark Core
+  ### Spark SQL
+  ### Spark Streaming
+]
+
+.right-column-inverse[
+#### What is Spark Streaming?
+#### Spark Streaming Programming Guide
+]
+
+---
+
+class: inverse
+name: agenda
+
+.left-column-inverse[
+  # Agenda
+  ### Spark Core
+  ### Spark SQL
+  ### Spark Streaming
+  ### Strucured Streaming
+]
+
+.right-column-inverse[
+#### What is Strucured Streaming?
+#### Strucured Streamingg Programming Guide
+]
+
 
 ---
 
@@ -978,7 +1029,7 @@ Streaming DataFrames can be created through the `DataStreamReader` interface ([S
   ### QuickStart
   ### Programming Model
   ### Dataset/DataFrame
-  #### Input Sources
+  #### input sources
 ]
 .right-column[
 ### a few built-in sources
@@ -990,6 +1041,7 @@ Streaming DataFrames can be created through the `DataStreamReader` interface ([S
 |**Socket      **| No | Reads UTF8 text data from a socket connection|
 
 ]
+
 ---
 
 .left-column[
@@ -998,9 +1050,11 @@ Streaming DataFrames can be created through the `DataStreamReader` interface ([S
   ### QuickStart
   ### Programming Model
   ### Dataset/DataFrame
-  #### Input Sources
-  #### Schema inference and partition discovery
+  #### input sources
+  #### schema infer and partition discovery
+
 ]
+
 .right-column[
 ### Schema inference
 
@@ -1016,6 +1070,7 @@ Streaming DataFrames can be created through the `DataStreamReader` interface ([S
 - OK: /data/year=2016/ when /data/year=2015/ was present,
 - NOT OK: /data/date=2016-04-17/.
 ]
+
 ---
 
 .left-column[
@@ -1101,9 +1156,46 @@ case class TimeBasedWord(timestamp: Timestamp, word: String)
   ### Event Time
   ### Handling Late Data
 ]
+.right-column[
+  ### Late Data Handling
+<img src="imgs/structured-streaming-late-data.png" style="zoom: 0.5">
+]
+
+???
+还是沿用前面 window() + groupBy().count() 的例子，但注意有一条迟到的数据 12:11|dog
+
+可以看到，在这里的late data，在State里被正确地更新到了应在的位置
 
 ---
 
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### ...
+  ### Dataset/DataFrame
+  ### Event Time
+  ### Handling Late Data
+  ### Watermarking
+]
+.right-column[
+### Watermark Upadatemode
+```
+    val windowedCounts = timeWords
+*     .withWatermark("timestamp", "10 minutes")
+      .groupBy(window($"timestamp", "10 minutes", "5 minutes"),
+        $"word"
+      ).count()
+    val query = windowedCounts.writeStream
+      .outputMode("update")
+      .format("console")
+      .start()
+```
+.center[<img src="imgs/structured-streaming-watermark-update-mode.png" style="zoom: 0.31">]
+]
+
+???
+
+---
 
 class: middle, center, inverse
 name: greetings
