@@ -2,6 +2,7 @@ package com.netease.mammut.spark.training.streaming
 
 import java.sql.Timestamp
 
+import com.netease.mammut.spark.training.common.TimeBasedWord
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 
@@ -30,5 +31,3 @@ object TimeBasedWordCount {
     query.awaitTermination()
   }
 }
-
-case class TimeBasedWord(timestamp: Timestamp, word: String)

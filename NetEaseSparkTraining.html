@@ -1197,6 +1197,90 @@ case class TimeBasedWord(timestamp: Timestamp, word: String)
 
 ---
 
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### ...
+  ### Dataset/DataFrame
+  ### Event Time
+  ### Handling Late Data
+  ### Watermarking
+]
+.right-column[
+### Watermark AppendMode
+```
+    val windowedCounts = timeWords
+*     .withWatermark("timestamp", "10 minutes")
+      .groupBy(window($"timestamp", "10 minutes", "5 minutes"),
+        $"word"
+      ).count()
+    val query = windowedCounts.writeStream
+      .outputMode("append")
+      .format("console")
+      .start()
+```
+.center[<img src="imgs/structured-streaming-watermark-append-mode.png" style="zoom: 0.31">]
+]
+
+???
+
+---
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### ...
+  ### Dataset/DataFrame
+  ### Event Time
+  ### Handling Late Data
+  ### Watermarking
+]
+.right-column[
+### Conditions for watermarking to clean aggregation state
+- Output mode **MUST** be Append or Update.
+  - Complete mode requires all aggregate data to be preserved, and hence cannot use watermarking to drop intermediate state. See the Output Modes section for detailed explanation of the semantics of each output mode.
+
+- The aggregation **MUST** have either the event-time column, or a window on the event-time column.
+
+- `withWatermark` **MUST** be called on the same column as the timestamp column used in the aggregate.
+  - For example, `df.withWatermark("time", "1 min").groupBy("time2").count()` is invalid in Append output mode, as watermark is defined on a different column from the aggregation column.
+
+- `withWatermark` **MUST** be called before the aggregation for the watermark details to be used.
+  - For example, `df.groupBy("time").count().withWatermark("time", "1 min")` is invalid in Append output mode.
+]
+
+???
+
+---
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### ...
+  ### Dataset/DataFrame
+  ### Event Time
+  ### Handling Late Data
+  ### Watermarking
+  ### Join Operation
+]
+.right-column[
+### Conditions for watermarking to clean aggregation state
+- Output mode **MUST** be Append or Update.
+  - Complete mode requires all aggregate data to be preserved, and hence cannot use watermarking to drop intermediate state. See the Output Modes section for detailed explanation of the semantics of each output mode.
+
+- The aggregation **MUST** have either the event-time column, or a window on the event-time column.
+
+- `withWatermark` **MUST** be called on the same column as the timestamp column used in the aggregate.
+  - For example, `df.withWatermark("time", "1 min").groupBy("time2").count()` is invalid in Append output mode, as watermark is defined on a different column from the aggregation column.
+
+- `withWatermark` **MUST** be called before the aggregation for the watermark details to be used.
+  - For example, `df.groupBy("time").count().withWatermark("time", "1 min")` is invalid in Append output mode.
+]
+
+???
+
+---
+
 class: middle, center, inverse
 name: greetings
 # Thank You!
