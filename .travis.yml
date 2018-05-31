@@ -15,8 +15,5 @@ deploy:
   on:
     branch: master
 
-install:
-  - mvn install -q -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-
 script:
   - mvn package -q -Dmaven.javadoc.skip=true -B -V
