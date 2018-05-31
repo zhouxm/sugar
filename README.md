@@ -7,5 +7,5 @@
 
 ## 学习分享
 
-[NetEaseSparkTraining](slides/NetEaseSparkTraining.html)
+[Spark Basics](https://yaooqinn.github.io/sugar/slides/SparkBasics.html#1)
 
