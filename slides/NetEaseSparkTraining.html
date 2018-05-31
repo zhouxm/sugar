@@ -190,7 +190,7 @@ task启动时间比较快，Spark是fork出线程；而MR是启动一个新的�
 
 ### Logistic regression in Hadoop and Spark
 
-.center[.bottom[<img src="imgs/logistic-regression.png" style="zoom:2.0">]]
+.center[.bottom[<img src="../imgs/logistic-regression.png" style="zoom:2.0">]]
 
 ---
 
@@ -280,8 +280,8 @@ RDDs support two types of operations:
   - which return a value to the driver program after running a computation on the dataset
 
 
-<img style="zoom: 0.45" src="./imgs/rdd-operations.png" />
-<img style="zoom: 0.35" src="./imgs/spark-rddoperations.png" />
+<img style="zoom: 0.45" src="../imgs/rdd-operations.png" />
+<img style="zoom: 0.35" src="../imgs/spark-rddoperations.png" />
 
 ]
 
@@ -312,7 +312,7 @@ name: whatisrddlineage
   - built as a result of applying transformations to the RDD
 
 
-<img style="zoom: 0.60" src="./imgs/rdd-lineage.jpg" />
+<img style="zoom: 0.60" src="../imgs/rdd-lineage.jpg" />
 
 ### toDebugString
 
@@ -361,7 +361,7 @@ name: whatisrdddependencies
   - 1: n
   - everyday I am shuffling
 
-<img style="zoom: 0.40" src="./imgs/spark-rdd-dependencies.png" />
+<img style="zoom: 0.40" src="../imgs/spark-rdd-dependencies.png" />
 ]
 
 ???
@@ -395,7 +395,7 @@ name: whatisrddderddtojob
   - To run an action on RDD G, we build build stages at wide dependencies and pipeline narrow transformations inside each stage.
   - In this case, stage 1’s output RDD is already in RAM, so we run stage 2 and then 3
 
-<img style="zoom: 0.60" src="./imgs/spark-rddtojob.png" />
+<img style="zoom: 0.60" src="../imgs/spark-rddtojob.png" />
 ]
 
 ???
@@ -440,7 +440,7 @@ name:sparkarchitecture
   ### Architecture
 ]
 .right-column[
-  ![](./imgs/spark-stack.png)
+  ![](../imgs/spark-stack.png)
 - Spark SQL
   - support for structured data and relational queries
 - Spark Streaming
@@ -464,7 +464,7 @@ name:clusteroverview
   ### Components
 ]
 .right-column[
-  .bottom[![](./imgs/cluster-overview.png)]
+  .bottom[![](../imgs/cluster-overview.png)]
 - Driver program
     - the process running the main() function of the application and creating the SparkContext
 - Cluster manager
@@ -495,7 +495,7 @@ name:whatissparksparkcontext
 .right-column[
 - the entrance / the heart / the master of a Spark APP
 
-![](./imgs/sparkcontext-services.png)
+![](../imgs/sparkcontext-services.png)
 ]
 
 ---
@@ -804,7 +804,7 @@ name: sparksqldataset
 ]
 .right-column[
 
-    <img style="zoom: 1.0" src="imgs/rdd.png" />
+    <img style="zoom: 1.0" src="../imgs/rdd.png" />
 ]
 
 ???
@@ -826,7 +826,7 @@ name: sparksql
 
 ]
 .right-column[
-<img style="zoom: 0.40" src="imgs/sparksqlcatalyst.png" />
+<img style="zoom: 0.40" src="../imgs/sparksqlcatalyst.png" />
 ]
 
 ---
@@ -880,7 +880,7 @@ a scalable and fault-tolerant stream processing engine built on the **Spark SQL*
   - express streaming aggregations, event-time windows, stream batch joins, etc in Scala, Java, Python or R
   - end-to-end exactly-once fault-tolerance guarantees(checkpointing & Write Ahead Logs)
 
-<img style="zoom: 0.9" src="imgs/sparkonrdd.png"> <img style="zoom: 0.9" src="imgs/sparkonsql.png">
+<img style="zoom: 0.9" src="../imgs/sparkonrdd.png"> <img style="zoom: 0.9" src="imgs/sparkonsql.png">
 - Spark 1.x
   - SparkContext/RDD API based
   - SQLContext/HiveContext/StreamingContext
@@ -985,7 +985,7 @@ name:structuredstreamingprogramingmodelexample
 ]
 .right-column[
 ### Quick Example
-<img src="imgs/structured-streaming-example-model.png" style="zoom:0.45">
+<img src="../imgs/structured-streaming-example-model.png" style="zoom:0.45">
 
 In this model, Spark is responsible for updating the Result Table when there is new data, thus relieving the users from reasoning about fault-tolerance, and data consistency(at-least-once, or at-most-once, or exactly-once)
 ]
@@ -1007,7 +1007,7 @@ name:structuredstreamingprogramingmodel
 ]
 .right-column[
 ### unbounded input table
-<img src="imgs/streamingtable.png">
+<img src="../imgs/streamingtable.png">
 
 The key idea in Structured Streaming is to treat a live data stream as a table that is being continuously appended
 
@@ -1031,7 +1031,7 @@ name:structuredstreamingprogramingmodelbasic
 ]
 .right-column[
 ### Input Table
-<img src="imgs/structured-streaming-stream-as-a-table.png" style="zoom:0.50">
+<img src="../imgs/structured-streaming-stream-as-a-table.png" style="zoom:0.50">
 
 Consider the input data stream as the “Input Table”. Every data item that is arriving on the stream is like a new row being appended to the Input Table.
 
@@ -1049,7 +1049,7 @@ name:structuredstreamingprogramingbasic2
 ]
 .right-column[
 ### Result Table
-<img src="imgs/structured-streaming-model.png" style="zoom:0.45">
+<img src="../imgs/structured-streaming-model.png" style="zoom:0.45">
 
 Every trigger interval(say, every 1 second), new rows get appended to the Input Table, which eventually updates the Result Table. Whenever the result table gets updated, we would want to write the changed result rows to an external sink.
 ]
@@ -1163,7 +1163,7 @@ Streaming DataFrames can be created through the `DataStreamReader` interface ([S
 .right-column[
 ### Window Operations on Event Time
 
-<img src="imgs/structured-streaming-window.png" style="zoom: 0.5">
+<img src="../imgs/structured-streaming-window.png" style="zoom: 0.5">
 ]
 
 ???
@@ -1237,7 +1237,7 @@ case class TimeBasedWord(timestamp: Timestamp, word: String)
 ]
 .right-column[
   ### Late Data Handling
-<img src="imgs/structured-streaming-late-data.png" style="zoom: 0.5">
+<img src="../imgs/structured-streaming-late-data.png" style="zoom: 0.5">
 ]
 
 ???
@@ -1269,7 +1269,7 @@ case class TimeBasedWord(timestamp: Timestamp, word: String)
       .format("console")
       .start()
 ```
-.center[<img src="imgs/structured-streaming-watermark-update-mode.png" style="zoom: 0.31">]
+.center[<img src="../imgs/structured-streaming-watermark-update-mode.png" style="zoom: 0.31">]
 ]
 
 ???
@@ -1298,7 +1298,7 @@ case class TimeBasedWord(timestamp: Timestamp, word: String)
       .format("console")
       .start()
 ```
-.center[<img src="imgs/structured-streaming-watermark-append-mode.png" style="zoom: 0.31">]
+.center[<img src="../imgs/structured-streaming-watermark-append-mode.png" style="zoom: 0.31">]
 ]
 
 ???
