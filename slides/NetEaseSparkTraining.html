@@ -1,0 +1,1390 @@
+
+<html>
+  <head>
+    <title>NetEase Spark Training</title>
+    <meta charset="utf-8">
+    <style>
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        ffont-weight: 400;
+        margin-bottom: 0;
+      }
+      .remark-slide-content h1 { font-size: 3em; }
+      .remark-slide-content h2 { font-size: 2em; }
+      .remark-slide-content h3 { font-size: 1.6em; }
+      .footnote {
+        position: absolute;
+        bottom: 3em;
+      }
+      li p { line-height: 1.25em; }
+      .red { color: #fa0000; }
+      .large { font-size: 2em; }
+      a, a > code {
+        color: rgb(249, 38, 114);
+        text-decoration: none;
+      }
+      code {
+        background: #e7e8e2;
+        border-radius: 5px;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+      .remark-code-line-highlighted     { background-color: #373832; }
+      .pull-left {
+        float: left;
+        width: 47%;
+      }
+      .pull-right {
+        float: right;
+        width: 47%;
+      }
+      .pull-right ~ p {
+        clear: both;
+      }
+      #slideshow .slide .content code {
+        font-size: 0.8em;
+      }
+      #slideshow .slide .content pre code {
+        font-size: 0.9em;
+        padding: 15px;
+      }
+      .inverse {
+        background: #272822;
+        color: #777872;
+        text-shadow: 0 0 20px #333;
+      }
+      .inverse h1, .inverse h2 {
+        color: #fff;
+        line-height: 0.8em;
+      }
+
+      /* Slide-specific styling */
+      #slide-inverse .footnote {
+        bottom: 12px;
+        left: 20px;
+      }
+      #slide-how .slides {
+        font-size: 0.9em;
+        position: absolute;
+        top:  151px;
+        right: 140px;
+      }
+      #slide-how .slides h3 {
+        margin-top: 0.2em;
+      }
+      #slide-how .slides .first, #slide-how .slides .second {
+        padding: 1px 20px;
+        height: 90px;
+        width: 120px;
+        -moz-box-shadow: 0 0 10px #777;
+        -webkit-box-shadow: 0 0 10px #777;
+        box-shadow: 0 0 10px #777;
+      }
+      #slide-how .slides .first {
+        background: #fff;
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        z-index: 1;
+      }
+      #slide-how .slides .second {
+        position: relative;
+        background: #fff;
+        z-index: 0;
+      }
+
+      /* Two-column layout */
+      .left-column {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+      }
+      .left-column h2:last-of-type, .left-column h3:last-of-type {
+        color: #000;
+      }
+      .right-column {
+        width: 75%;
+        float: right;
+        padding-top: 1em;
+      }
+
+      /* Two-column layout inverse*/
+      .left-column-inverse {
+        color: #777;
+        width: 20%;
+        height: 92%;
+        float: left;
+      }
+      .left-column-inverse h2:last-of-type, .left-column-inverse h3:last-of-type {
+        color: #fff;
+      }
+      .right-column-inverse {
+        width: 75%;
+        float: right;
+        padding-top: 1em;
+      }
+      .right-column-inverse h2, .right-column-inverse h3, .right-column-inverse h4 {
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle, inverse
+
+# NetEase Spark Training
+### [Kent Yao]
+
+???
+大家好！
+
+---
+
+class: inverse, center
+name: agenda
+
+
+  # Agenda
+
+  ## -
+
+  ** Spark Core ** <br>
+
+  ** [Spark SQL](NetEaseSparkTrainingSQL.html) ** <br>
+
+  ** Spark Streaming ** <br>
+
+  ** [Structured Streaming](NetEaseSparkTrainingStructuedStreaming.html) **<br>
+
+  ** Machine Learning ** <br>
+
+  ** GrahpX ** <br>
+
+  ** Configuration **<br>
+
+  ** Tuning **
+
+---
+## Comparing Spark to MR, Why Fast?
+|- | **MR** | **Spark** |
+|:---:|---|---|
+| **  Task Scheduler **| Process | Thread |
+|**Shuffle**||
+
+???
+
+一般来说，Spark比MapReduce运行速度快的原因主要有以下几点：
+
+task启动时间比较快，Spark是fork出线程；而MR是启动一个新的进程；
+更快的shuffles，Spark只有在shuffle的时候才会将数据放在磁盘，而MR却不是。
+更快的工作流：典型的MR工作流是由很多MR作业组成的，他们之间的数据交互需要把数据持久化到磁盘才可以；而Spark支持DAG以及pipelining，在没有遇到shuffle完全可以不把数据缓存到磁盘。
+缓存：虽然目前HDFS也支持缓存，但是一般来说，Spark的缓存功能更加高效，特别是在SparkSQL中，我们可以将数据以列式的形式储存在内存中。
+
+---
+
+### Logistic regression in Hadoop and Spark
+
+.center[.bottom[<img src="imgs/logistic-regression.png" style="zoom:2.0">]]
+
+---
+
+class: inverse
+name: agenda
+
+.left-column-inverse[
+  # Agenda
+  ### Spark Core
+]
+
+.right-column-inverse[
+### What is RDD?
+### What is Spark?
+### Spark Programming Guide
+]
+
+---
+
+class:
+name: whatisrddoverview
+.left-column[
+  ## What is RDD?
+  ### Overview
+]
+
+.right-column[
+- In-memory
+  - efficient fault tolerance
+- Handle inefficiently
+  - iterative algorithms
+  - interactive data mining tools
+- Read-only
+  - provides a restricted form of shared memory
+  - shared state: coarse-grained transformations(√) fine-grained updates(×).
+- A system
+  - Spark
+]
+
+???
+RDD设计背景
+在实际应用中，存在许多迭代式算法（比如机器学习、图算法等）和交互式数据挖掘工具，这些应用场景的共同之处是，不同计算阶段之间会重用中间结果，即一个阶段的输出结果会作为下一个阶段的输入。但是，目前的MapReduce框架都是把中间结果写入到HDFS中，带来了大量的数据复制、磁盘IO和序列化开销。虽然，类似Pregel等图计算框架也是将结果保存在内存当中，但是，这些框架只能支持一些特定的计算模式，并没有提供一种通用的数据抽象。RDD就是为了满足这种需求而出现的，它提供了一个抽象的数据架构，我们不必担心底层数据的分布式特性，只需将具体的应用逻辑表达为一系列转换处理，不同RDD之间的转换操作形成依赖关系，可以实现管道化，从而避免了中间结果的存储，大大降低了数据复制、磁盘IO和序列化开销。
+
+
+---
+
+class:
+name: whatisrddabstraction
+.left-column[
+  ## What is RDD?
+  ### Overview
+  ### Abstraction
+]
+
+.right-column[
+A Resilient Distributed Dataset (RDD), the basic abstraction in Spark. Represents an immutable, partitioned collection of elements that can be operated on in parallel
+- Internally, each RDD is characterized by five main properties:
+  - A list of partitions
+  - A function for computing each split
+  - A list of dependencies on other RDDs
+  - Optionally, a Partitioner for key-value RDDs (e.g. to say that the RDD is hash-partitioned)
+  - Optionally, a list of preferred locations to compute each split on (e.g. block locations for an HDFS file)
+]
+
+???
+
+一个RDD就是一个分布式对象集合，本质上是一个只读的分区记录集合，
+每个RDD可以分成多个分区，每个分区就是一个数据集片段，并且一个RDD的不同分区可以被保存到集群中不同的节点上，从而可以在集群中的不同节点上进行并行计算。RDD提供了一种高度受限的共享内存模型，即RDD是只读的记录分区的集合，不能直接修改，只能基于稳定的物理存储中的数据集来创建RDD，或者通过在其他RDD上执行确定的转换操作（如map、join和groupBy）而创建得到新的RDD。
+
+---
+
+class:
+name: whatisrddlimitations
+
+.left-column[
+  ## What is RDD?
+  ### Overview
+  ### Abstraction
+  ### Operations
+]
+
+.right-column[
+RDDs support two types of operations:
+- transformations
+  - which create a new dataset from an existing one
+- actions
+  - which return a value to the driver program after running a computation on the dataset
+
+
+<img style="zoom: 0.45" src="./imgs/rdd-operations.png" />
+<img style="zoom: 0.35" src="./imgs/spark-rddoperations.png" />
+
+]
+
+???
+
+RDD提供了一组丰富的操作以支持常见的数据运算，分为Action和Transformation两种类型，前者用于执行计算并指定输出的形式，后者指定RDD之间的相互依赖关系。
+
+两类操作的主要区别是，transformations（比如map、filter、groupBy、join等）接受RDD并返回RDD，
+而action操作（比如count、collect等）接受RDD但是返回非RDD（即输出一个值或结果）。
+RDD提供的转换接口都非常简单，都是类似map、filter、groupBy、join等粗粒度的数据转换操作，而不是针对某个数据项的细粒度修改。
+
+---
+
+class:
+name: whatisrddlineage
+
+.left-column[
+  ## What is RDD?
+  ### Overview
+  ### Abstraction
+  ### Operations
+  ### Lineage
+]
+
+.right-column[
+### A.K.A RDD operator graph or RDD dependency graph
+  - a graph of all the parent RDDs of a RDD
+  - built as a result of applying transformations to the RDD
+
+
+<img style="zoom: 0.60" src="./imgs/rdd-lineage.jpg" />
+
+### toDebugString
+
+```scala
+scala> val wordCount = sc.textFile("README.md").flatMap(_.split("\\s+")).map((_, 1)).reduceByKey(_ + _)
+wordCount: org.apache.spark.rdd.RDD[(String, Int)] = ShuffledRDD[21] at reduceByKey at <console>:24
+
+scala> wordCount.toDebugString
+res13: String =
+(2) ShuffledRDD[21] at reduceByKey at <console>:24 []
+ +-(2) MapPartitionsRDD[20] at map at <console>:24 []
+    |  MapPartitionsRDD[19] at flatMap at <console>:24 []
+    |  README.md MapPartitionsRDD[18] at textFile at <console>:24 []
+    |  README.md HadoopRDD[17] at textFile at <console>:24 []
+```
+]
+
+???
+
+Spark的这种依赖关系设计，使其具有了天生的容错性，大大加快了Spark的执行速度。因为，RDD数据集通过“血缘关系”记住了它是如何从其它RDD中演变过来的，血缘关系记录的是粗颗粒度的转换操作行为，当这个RDD的部分分区数据丢失时，它可以通过血缘关系获取足够的信息来重新运算和恢复丢失的数据分区，由此带来了性能的提升。
+
+
+---
+
+class:
+name: whatisrdddependencies
+
+.left-column[
+  ## What is RDD?
+  ### Overview
+  ### Abstraction
+  ### Operations
+  ### Lineage
+  ### Dependencies
+]
+
+.right-column[
+### Dependency
+  - the base (abstract) class to model a dependency relationship between two or more RDDs.
+
+#### - Narrow Dependencies
+  - 1: 1; n: 1
+  - allow for pipelined execution
+
+#### - Wide Dependencies
+  - 1: n
+  - everyday I am shuffling
+
+<img style="zoom: 0.40" src="./imgs/spark-rdd-dependencies.png" />
+]
+
+???
+窄依赖表现为一个父RDD的分区对应于一个子RDD的分区，或多个父RDD的分区对应于一个子RDD的分区
+
+宽依赖则表现为存在一个父RDD的一个分区对应一个子RDD的多个分区
+
+总体而言，如果父RDD的一个分区只被一个子RDD的一个分区所使用就是窄依赖，否则就是宽依赖。
+
+在两种依赖关系中，窄依赖的失败恢复更为高效，它只需要根据父RDD分区重新计算丢失的分区即可（不需要重新计算所有分区），而且可以并行地在不同节点进行重新计算。而对于宽依赖而言，单个节点失效通常意味着重新计算过程会涉及多个父RDD分区，开销较大。
+
+---
+
+class:
+name: whatisrddderddtojob
+
+.left-column[
+  ## What is RDD?
+  ### Overview
+  ### Abstraction
+  ### Operations
+  ### Lineage
+  ### Dependencies
+  ### Job Scheduling
+]
+
+.right-column[
+### Example of how Spark computes job stages.
+  - Boxes with solid outlines are RDDs.
+  - Partitions are shaded rectangles, in black if they are already in memory.
+  - To run an action on RDD G, we build build stages at wide dependencies and pipeline narrow transformations inside each stage.
+  - In this case, stage 1’s output RDD is already in RAM, so we run stage 2 and then 3
+
+<img style="zoom: 0.60" src="./imgs/spark-rddtojob.png" />
+]
+
+???
+
+Spark通过分析各个RDD的依赖关系生成了DAG，再通过分析各个RDD中的分区之间的依赖关系来决定如何划分阶段，具体划分方法是：在DAG中进行反向解析，遇到宽依赖就断开，遇到窄依赖就把当前的RDD加入到当前的阶段中；将窄依赖尽量划分在同一个阶段中，可以实现流水线计算
+
+---
+
+class:
+name: whatisspark
+
+.left-column[
+  ## What is Spark?
+  ### Overview
+]
+.right-column[
+
+##### Apache Spark is a fast and general-purpose cluster computing system
+- #### Speed
+  - DAG execution engine supporting acyclic data flow and in-memory computing
+
+- #### Ease of Use
+  - Write applications quickly in Java, Scala, Python, R, SQL
+
+- #### Generality
+  - Combine SQL, streaming, and complex analytics.
+
+- #### Runs Everywhere
+  - Standalone
+  - Mesos
+  - Yarn
+]
+
+---
+
+class:
+name:sparkarchitecture
+
+.left-column[
+  ## What is Spark?
+  ### Overview
+  ### Architecture
+]
+.right-column[
+  ![](./imgs/spark-stack.png)
+- Spark SQL
+  - support for structured data and relational queries
+- Spark Streaming
+  - processing real-time data streams
+- MLlib
+  - built-in machine learning library
+- GraphX
+  -  graph processing
+
+]
+
+---
+
+class:
+name:clusteroverview
+
+.left-column[
+  ## What is Spark?
+  ### Overview
+  ### Architecture
+  ### Components
+]
+.right-column[
+  .bottom[![](./imgs/cluster-overview.png)]
+- Driver program
+    - the process running the main() function of the application and creating the SparkContext
+- Cluster manager
+    - an external service for acquiring resources on the cluster (e.g. standalone manager, Mesos, YARN)
+- Worker node
+    - any node that can run application code in the cluster
+- Executor
+    - a process launched for an application on a worker node, that runs tasks and keeps data in memory or disk storage across them. Each application has its own executors.
+]
+
+???
+
+Spark运行架构包括集群资源管理器（Cluster Manager）、运行作业任务的工作节点（Worker Node）、每个应用的任务控制节点（Driver）和每个工作节点上负责具体任务的执行进程（Executor）。其中，集群资源管理器可以是Spark自带的资源管理器，也可以是YARN或Mesos等资源管理框架。
+与Hadoop MapReduce计算框架相比，Spark所采用的Executor有两个优点：一是利用多线程来执行具体的任务（Hadoop MapReduce采用的是进程模型），减少任务的启动开销；二是Executor中有一个BlockManager存储模块，会将内存和磁盘共同作为存储设备，当需要多轮迭代计算时，可以将中间结果存储到这个存储模块里，下次需要时，就可以直接读该存储模块里的数据，而不需要读写到HDFS等文件系统里，因而有效减少了IO开销；或者在交互式查询场景下，预先将表缓存到该存储系统上，从而可以提高读写IO性能。
+
+---
+
+class:
+name:whatissparksparkcontext
+
+.left-column[
+  ## What is Spark?
+  ### Overview
+  ### Architecture
+  ### Components
+  ### SparkContext
+]
+.right-column[
+- the entrance / the heart / the master of a Spark APP
+
+![](./imgs/sparkcontext-services.png)
+]
+
+---
+
+class:
+name: sparkprogramingguide
+
+.left-column[
+  ## Spark Programming Guide
+  ### Terminology
+]
+
+.right-column[
+- Spark application
+    - a driver program that runs the user’s main function and executes various parallel operations on a cluster
+- RDD
+    - a collection of elements partitioned across the nodes of the cluster that can be operated on in parallel
+- Shared variables
+    - broadcast variables
+    - accumulators
+- Job
+    - a parallel computation consisting of multiple tasks that gets spawned in response to a Spark action (e.g. save, collect)
+- Stage
+    - each job gets divided into smaller sets of tasks called stages that depend on each other (similar to the map and reduce stages in MapReduce)
+- Task
+    - a unit of work that will be sent to one executor
+]
+
+???
+
+在Spark中，一个应用（Application）由一个任务控制节点（Driver）和若干个作业（Job）构成，一个作业由多个阶段（Stage）构成，一个阶段由多个任务（Task）组成。当执行一个应用时，任务控制节点会向集群管理器（Cluster Manager）申请资源，启动Executor，并向Executor发送应用程序代码和文件，然后在Executor上执行任务，运行结束后，执行结果会返回给任务控制节点，或者写到HDFS或者其他数据库中。
+
+---
+
+class:
+name:sparkprogramingguidesparkshell
+
+.left-column[
+  ## Spark Programming Guide
+  ### Terminology
+  ### Spark Shell
+]
+.right-column[
+#### - The launch code
+```shell
+./bin/spark-shell
+```
+
+#### - A simple case: Word Count
+```scala
+scala> val lines = spark.read.textFile(“README.md”)
+lines: org.apache.spark.sql.Dataset[String] = [value: string]
+scala> val words = lines.flatMap(_.split(“ ”))
+words: org.apache.spark.sql.Dataset[String] = [value: string]
+scala> val groups = words.groupByKey(identity)
+groups: org.apache.spark.sql.KeyValueGroupedDataset[String,String] = org.apache.spark.sql.KeyValueGroupedDataset@6473ef35
+scala> val wordcount = groups.count
+wordcount: org.apache.spark.sql.Dataset[(String, Long)] = [value: string, count(1): bigint]
+```
+
+#### - Simpler way
+```scala
+val res = spark.read.textFile("README.md")
+  .flatMap(_.split(" "))
+  .groupByKey(identity)
+  .count
+  .collect
+```
+]
+
+---
+
+class:
+name:sparkprogramingguidesparksubmit1
+
+.left-column[
+  ## Spark Programming Guide
+  ### Terminology
+  ### Spark Shell
+  ### Spark Submit
+]
+.right-column[
+#### Self-Contained Word Count App
+#####  - Maven dependency on Spark
+```xml
+<properties>
+  <spark.version>2.1.0</spark.version>
+</properties>
+
+<dependencies>
+  <dependency>
+    <groupId>org.apache.spark</groupId>
+    <artifactId>spark-core_2.11</artifactId>
+    <version>${spark.version}</version>
+    <scope>provided</scope>
+  </dependency>
+</dependencies>
+```
+]
+
+---
+
+class:
+name:sparkprogramingguidesparksubmit2
+
+.left-column[
+  ## Spark Programming Guide
+  ### Terminology
+  ### Spark Shell
+  ### Spark Submit
+]
+.right-column[
+#### Self-Contained Word Count App
+#####  - Write main procedure
+```scala
+package com.netease.mammut.spark.training
+
+import org.apache.spark.{SparkConf, SparkContext}
+
+object WordCount {
+
+  def main(args: Array[String]): Unit = {
+    require(args.length == 1, "Usage: WordCount <input file>")
+
+    val conf = new SparkConf().setAppName("Word Count").setMaster("local[*]")
+    val sparkContext = new SparkContext(conf)
+
+    val textFile = sparkContext.textFile(args(0), 2)
+    val words = textFile.flatMap(_.split(" "))
+    val ones = words.map((_, 1))
+    val counts = ones.reduceByKey(_ + _)
+
+    val res = counts.collect()
+
+    for ((word, count) <- res) {
+      println(word + ": " + count)
+    }
+
+    sparkContext.stop()
+  }
+}
+```
+]
+
+---
+
+class:
+name:sparkprogramingguidesparksubmit3
+
+.left-column[
+  ## Spark Programming Guide
+  ### Terminology
+  ### Spark Shell
+  ### Spark Submit
+]
+.right-column[
+#### Self-Contained Word Count App
+#####  - Compiling & Packaging
+```scala
+<build>
+  <plugins>
+    <plugin>
+      <!-- https://mvnrepository.com/artifact/net.alchim31.maven/scala-maven-plugin -->
+     <groupId>net.alchim31.maven</groupId>
+      <artifactId>scala-maven-plugin</artifactId>
+      <version>3.2.2</version>
+      <executions>
+        <execution>
+          <id>scala-compile-first</id>
+          <goals>
+            <goal>compile</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+  </plugins>
+</build>
+```
+
+```shell
+mvn package
+```
+]
+
+---
+
+class:
+name:sparkprogramingguidesparksubmit4
+
+.left-column[
+  ## Spark Programming Guide
+  ### Terminology
+  ### Spark Shell
+  ### Spark Submit
+]
+.right-column[
+#### Self-Contained Word Count App
+#####  - Submit Application
+###### - spark-submit
+```shell
+./bin/spark-submit \
+  --class <main-class> \
+  --master <master-url> \
+  --deploy-mode <deploy-mode> \
+  --conf <key>=<value> \
+  ... # other options
+  <application-jar> \
+  [application-arguments]
+```
+###### - our example
+```shell
+./bin/spark-submit
+  --class com.netease.mammut.spark.training.WordCount
+  /some/path/to/mammut-spark-training-1.0-SNAPSHOT.jar
+  README.md
+```
+]
+
+---
+
+class:
+name: sparkprogramingguide
+
+.left-column[
+  ## Spark Programming Guide
+  ### Terminology
+  ### Spark Shell
+  ### Spark Submit
+  ### What's More
+]
+.right-column[
+  .center.middle[
+  ### Where to Go from Here
+  Click [Spark Programing Guide](http://spark.apache.org/docs/2.1.0/programming-guide.html) to see more advantage usages of RDDs.
+  ]
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+class: inverse
+name: agenda
+
+.left-column-inverse[
+  # Agenda
+  ### Spark Core
+  ### Spark SQL
+]
+
+.right-column-inverse[
+#### What is Spark SQL?
+#### Spark SQL Programming Guide
+]
+
+---
+
+class:
+name: sparksqldataset
+
+.left-column[
+  ## Spark SQL
+  ### Dataset/DataFrame
+]
+.right-column[
+
+    <img style="zoom: 1.0" src="imgs/rdd.png" />
+]
+
+???
+
+Spark 1.x的RDD更多意义上是一个一维、只有行概念的数据集，比如 RDD[Person]，那么一行就是一个Person，存在内存里也是把 Person 作为一个整体（序列化前的java object，或序列化后的bytes）。
+
+Spark 2.x里，一个 Person 的 Dataset 或 DataFrame，是二维行+列的数据集，比如一行一个 Person，有 name:String, age:Int, height:Double 三列；在内存里的物理结构，也会显式区分列边界。
+Dataset/DataFrame 在 API 使用上有区别：Dataset 相比 DataFrame 而言是 type-safe 的，能够在编译时对 AnalysisExecption 报错（如下图示例）:
+Dataset/DataFrame 存储方式无区别：两者在内存中的存储方式是完全一样的、是按照二维行列（UnsafeRow）来存的，所以在没必要区分 Dataset 或 DataFrame 在 API 层面的差别时，我们统一写作 Dataset/DataFrame
+
+---
+
+class:
+name: sparksql
+
+.left-column[
+  ## Spark SQL
+
+
+]
+.right-column[
+<img style="zoom: 0.40" src="imgs/sparksqlcatalyst.png" />
+]
+
+---
+
+class: inverse
+name: agenda
+
+.left-column-inverse[
+  # Agenda
+  ### Spark Core
+  ### Spark SQL
+  ### Spark Streaming
+]
+
+.right-column-inverse[
+#### What is Spark Streaming?
+#### Spark Streaming Programming Guide
+]
+
+---
+
+class: inverse
+name: agenda
+
+.left-column-inverse[
+  # Agenda
+  ### Spark Core
+  ### Spark SQL
+  ### Spark Streaming
+  ### Strucured Streaming
+]
+
+.right-column-inverse[
+#### What is Strucured Streaming?
+#### Strucured Streamingg Programming Guide
+]
+
+
+---
+
+class:
+name: structuredstreaming
+.left-column[
+  ## Structured Streaming
+  ### Overview
+
+]
+.right-column[
+a scalable and fault-tolerant stream processing engine built on the **Spark SQL** engine
+  - express streaming computation as same as batch process on static data
+  - express streaming aggregations, event-time windows, stream batch joins, etc in Scala, Java, Python or R
+  - end-to-end exactly-once fault-tolerance guarantees(checkpointing & Write Ahead Logs)
+
+<img style="zoom: 0.9" src="imgs/sparkonrdd.png"> <img style="zoom: 0.9" src="imgs/sparkonsql.png">
+- Spark 1.x
+  - SparkContext/RDD API based
+  - SQLContext/HiveContext/StreamingContext
+- Spark 2.x
+  - Dataset/DataFrame API based
+  - SparkSession
+
+**one stack to rule them all**
+]
+
+???
+
+Spark 1.x 时代里，以 SparkContext（及 RDD API）为基础，在 structured data 场景衍生出了 SQLContext, HiveContext，在 streaming 场景衍生出了StreamingContext，很是琳琅满目。
+
+Spark 2.x 则咔咔咔精简到只保留一个 SparkSession 作为主程序入口，以 Dataset/DataFrame 为主要的用户 API，同时满足 structured data, streaming data, machine learning, graph 等应用场景，大大减少使用者需要学习的内容，爽爽地又重新实现了一把当年的 "one stack to rule them all" 的理想。
+
+---
+
+class:
+name:structuredstreamingprogramingmodelexample
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ##### Fault Tolerance Semantics
+]
+.right-column[
+### Fault Tolerance Semantics
+Delivering **end-to-end exactly-once** semantics was one of key goals behind the design of Structured Streaming
+
+                   +-----------------------------------------------+
+                   |    offset tracking in WAL                     |
+                   |              +                     end-2-end  |
+                   |       state management        =   exactly-once|
+                   |              +                     guarantees |
+                   | fault+torrent sources & sinks                 |
+                   +-----------------------------------------------+
+Structured Streaming sources, the sinks and the execution engine reliably track the exact progress of the processing so that it can handle any kind of failure by **restarting** and/or **reprocessing**.
+  - **replayable sources** is assumed to have offsets (similar to Kafka offsets, or Kinesis sequence numbers) to track the read position in the stream.
+  - The engine uses **checkpointing** and **write ahead logs** to record the offset range of the data being processed in each trigger.
+  - **idempotent sinks** for handling reprocessing
+]
+
+---
+
+class:
+name: structuredstreamingquickstart
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### QuickStart
+]
+.right-column[
+### A simple case: Network Word Count
+```scala
+import org.apache.spark.sql.SparkSession
+
+object WordCount extends App {
+  val spark = SparkSession
+    .builder()
+    .appName("StructuredNetworkWordCount")
+    .getOrCreate()
+  import spark.implicits._
+  // represents an unbounded table containing the streaming text data
+  val lines = spark.readStream
+    .format("socket")
+    .option("host", "localhost")
+    .option("port", 9999)
+    .load()
+  val words = lines.as[String].flatMap(_.split(" "))
+  val wordCounts = words.groupBy("value").count()
+  val query = wordCounts.writeStream
+    .outputMode("complete")
+    .format("console")
+    .start()
+  query.awaitTermination()
+}
+```
+```
+nc -lk 9999
+```
+]
+
+???
+
+Structured Streaming 也是先纯定义、再触发执行的模式，即
+    前面大部分代码是 纯定义 Dataset/DataFrame 的产生、变换和写出
+    后面位置再真正 start 一个新线程，去触发执行之前的定义
+在新的执行线程里我们需要 持续地 去发现新数据，进而 持续地 查询最新计算结果至写出
+    这个过程叫做 continous query（持续查询）
+
+---
+
+class:
+name:structuredstreamingprogramingmodelexample
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### QuickStart
+
+]
+.right-column[
+### Quick Example
+<img src="imgs/structured-streaming-example-model.png" style="zoom:0.45">
+
+In this model, Spark is responsible for updating the Result Table when there is new data, thus relieving the users from reasoning about fault-tolerance, and data consistency(at-least-once, or at-most-once, or exactly-once)
+]
+
+???
+
+Spark Streaming 时代有过非官方的 event time 支持尝试，而在进化后的 Structured Streaming 里，添加了对 event time 的原生支持。
+
+---
+
+class:
+name:structuredstreamingprogramingmodel
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+]
+.right-column[
+### unbounded input table
+<img src="imgs/streamingtable.png">
+
+The key idea in Structured Streaming is to treat a live data stream as a table that is being continuously appended
+
+]
+
+???
+基于“无限增长的表格”的编程模型
+
+与静态的 structured data 不同，动态的 streaming data 的行列数据表格是一直无限增长的
+
+---
+class:
+name:structuredstreamingprogramingmodelbasic
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ##### Basic Concepts
+]
+.right-column[
+### Input Table
+<img src="imgs/structured-streaming-stream-as-a-table.png" style="zoom:0.50">
+
+Consider the input data stream as the “Input Table”. Every data item that is arriving on the stream is like a new row being appended to the Input Table.
+
+]
+
+---
+class:
+name:structuredstreamingprogramingbasic2
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ##### Basic Concepts
+]
+.right-column[
+### Result Table
+<img src="imgs/structured-streaming-model.png" style="zoom:0.45">
+
+Every trigger interval(say, every 1 second), new rows get appended to the Input Table, which eventually updates the Result Table. Whenever the result table gets updated, we would want to write the changed result rows to an external sink.
+]
+---
+class:
+name:structuredstreamingprogramingmodelbasic3
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ##### Basic Concepts
+]
+
+.right-column[
+### Output
+
+The “Output” is defined as what gets written out to the external storage.
+
+- Complete Mode
+  - The entire updated Result Table will be written to the external storage. It is up to the storage connector to decide how to handle writing of the entire table.
+
+- Append Mode
+  - Only the new rows appended in the Result Table since the last trigger will be written to the external storage. This is applicable **ONLY** on the queries where existing rows in the Result Table are not expected to change.
+
+- Update Mode
+  - Only the rows that were updated in the Result Table since the last trigger will be written to the external storage . Note that this is different from the Complete Mode in that this mode only outputs the rows that have changed since the last trigger. If the query doesn’t contain aggregations, it will be equivalent to Append mode.
+]
+---
+
+class:
+name:structuredstreamingprogramingmodelexample
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ### Dataset/DataFrame
+]
+.right-column[
+### Creating streaming DataFrames and streaming Datasets
+Since Spark 2.0, DataFrames and Datasets can represent static, bounded data, as well as streaming, unbounded data
+
+Streaming DataFrames can be created through the `DataStreamReader` interface ([Scala](http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.sql.streaming.DataStreamReader)/[Java](http://spark.apache.org/docs/latest/api/java/org/apache/spark/sql/streaming/DataStreamReader.html)/[Python](http://spark.apache.org/docs/latest/api/python/pyspark.sql.html#pyspark.sql.streaming.DataStreamReader) docs) returned by `SparkSession.readStream()`
+
+
+]
+
+---
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ### Dataset/DataFrame
+  #### input sources
+]
+.right-column[
+### a few built-in sources
+
+|Source| Fault-tolerant |Notes|
+| :---: | :---: | --- |
+|**File      ** | Yes |Reads files written in a directory as a stream of data. Supported file formats are text, csv, json, parquet.**Does not support multiple comma-separated paths/globs.**|
+|**Kafka      **| Yes|Poll data from Kafka. It’s compatible with Kafka broker versions 0.10.0 or higher. See the [Kafka Integration Guide](http://spark.apache.org/docs/latest/structured-streaming-kafka-integration.html) for more details. |
+|**Socket      **| No | Reads UTF8 text data from a socket connection|
+
+]
+
+---
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ### Dataset/DataFrame
+  #### input sources
+  #### schema infer and partition discovery
+
+]
+
+.right-column[
+### Schema inference
+
+ - specify the schema, **NOT** rely on Spark to infer it automatically.
+ - This restriction ensures a consistent schema will be used for the streaming query, even in the case of failures.
+ - For ad-hoc use cases, you can reenable schema inference by setting spark.sql.streaming.schemaInference to true.
+
+### Partition discovery
+
+- `/key=value/`
+- must be present
+- must remain static.
+- OK: /data/year=2016/ when /data/year=2015/ was present,
+- NOT OK: /data/date=2016-04-17/.
+]
+
+---
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ### Dataset/DataFrame
+  ### Event Time
+]
+.right-column[
+### Window Operations on Event Time
+
+<img src="imgs/structured-streaming-window.png" style="zoom: 0.5">
+]
+
+???
+
+我们有一系列 arriving 的 records
+首先是一个对着时间列 timestamp 做长度为10m，滑动为5m 的 window() 操作
+例如上图右上角的虚框部分，当达到一条记录 12:22|dog 时，会将 12:22 归入两个窗口 12:15-12:25、12:20-12:30，所以产生两条记录：12:15-12:25|dog、12:20-12:30|dog，对于记录 12:24|dog owl 同理产生两条记录：12:15-12:25|dog owl、12:20-12:30|dog owl
+所以这里 window() 操作的本质是 explode()，可由一条数据产生多条数据
+然后对 window() 操作的结果，以 window 列和 word 列为 key，做 groupBy().count() 操作
+这个操作的聚合过程是增量的（借助 StateStore）
+最后得到一个有 window, word, count 三列的状态集
+
+
+
+---
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ### Dataset/DataFrame
+  ### Event Time
+]
+.right-column[
+```scala
+package com.netease.mammut.spark.training.streaming
+
+import java.sql.Timestamp
+
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.functions._
+
+object TimeBasedWordCount {
+  def main(args: Array[String]): Unit = {
+    val spark = SparkSession.builder()
+      .appName("TimeBasedWordCount")
+      .getOrCreate()
+    import spark.implicits._
+    val lines = spark.readStream
+      .format("socket")
+      .option("host", "localhost")
+      .option("port", 9999)
+      .load()
+*   val timeWords = lines.as[String].flatMap(_.split(" "))
+*     .map(TimeBasedWord(new Timestamp(System.currentTimeMillis()), _))
+*   val windowedCounts = timeWords.groupBy(
+*     window($"timestamp", "10 minutes", "5 minutes"),
+*     $"word").count()
+    val query = windowedCounts.writeStream
+      .outputMode("complete")
+      .format("console")
+      .start()
+    query.awaitTermination()
+  }
+}
+
+case class TimeBasedWord(timestamp: Timestamp, word: String)
+```
+]
+
+---
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### QuickStart
+  ### Programming Model
+  ### Dataset/DataFrame
+  ### Event Time
+  ### Handling Late Data
+]
+.right-column[
+  ### Late Data Handling
+<img src="imgs/structured-streaming-late-data.png" style="zoom: 0.5">
+]
+
+???
+还是沿用前面 window() + groupBy().count() 的例子，但注意有一条迟到的数据 12:11|dog
+
+可以看到，在这里的late data，在State里被正确地更新到了应在的位置
+
+---
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### ...
+  ### Dataset/DataFrame
+  ### Event Time
+  ### Handling Late Data
+  ### Watermarking
+]
+.right-column[
+### Watermark Upadatemode
+```
+    val windowedCounts = timeWords
+*     .withWatermark("timestamp", "10 minutes")
+      .groupBy(window($"timestamp", "10 minutes", "5 minutes"),
+        $"word"
+      ).count()
+    val query = windowedCounts.writeStream
+      .outputMode("update")
+      .format("console")
+      .start()
+```
+.center[<img src="imgs/structured-streaming-watermark-update-mode.png" style="zoom: 0.31">]
+]
+
+???
+
+---
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### ...
+  ### Dataset/DataFrame
+  ### Event Time
+  ### Handling Late Data
+  ### Watermarking
+]
+.right-column[
+### Watermark AppendMode
+```
+    val windowedCounts = timeWords
+*     .withWatermark("timestamp", "10 minutes")
+      .groupBy(window($"timestamp", "10 minutes", "5 minutes"),
+        $"word"
+      ).count()
+    val query = windowedCounts.writeStream
+      .outputMode("append")
+      .format("console")
+      .start()
+```
+.center[<img src="imgs/structured-streaming-watermark-append-mode.png" style="zoom: 0.31">]
+]
+
+???
+
+---
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### ...
+  ### Dataset/DataFrame
+  ### Event Time
+  ### Handling Late Data
+  ### Watermarking
+]
+.right-column[
+### Conditions for watermarking to clean aggregation state
+- Output mode **MUST** be Append or Update.
+  - Complete mode requires all aggregate data to be preserved, and hence cannot use watermarking to drop intermediate state. See the Output Modes section for detailed explanation of the semantics of each output mode.
+
+- The aggregation **MUST** have either the event-time column, or a window on the event-time column.
+
+- `withWatermark` **MUST** be called on the same column as the timestamp column used in the aggregate.
+  - For example, `df.withWatermark("time", "1 min").groupBy("time2").count()` is invalid in Append output mode, as watermark is defined on a different column from the aggregation column.
+
+- `withWatermark` **MUST** be called before the aggregation for the watermark details to be used.
+  - For example, `df.groupBy("time").count().withWatermark("time", "1 min")` is invalid in Append output mode.
+]
+
+???
+
+---
+
+.left-column[
+  ## Structured Streaming
+  ### Overview
+  ### ...
+  ### Dataset/DataFrame
+  ### Event Time
+  ### Handling Late Data
+  ### Watermarking
+  ### Join Operation
+]
+.right-column[
+### Conditions for watermarking to clean aggregation state
+- Output mode **MUST** be Append or Update.
+  - Complete mode requires all aggregate data to be preserved, and hence cannot use watermarking to drop intermediate state. See the Output Modes section for detailed explanation of the semantics of each output mode.
+
+- The aggregation **MUST** have either the event-time column, or a window on the event-time column.
+
+- `withWatermark` **MUST** be called on the same column as the timestamp column used in the aggregate.
+  - For example, `df.withWatermark("time", "1 min").groupBy("time2").count()` is invalid in Append output mode, as watermark is defined on a different column from the aggregation column.
+
+- `withWatermark` **MUST** be called before the aggregation for the watermark details to be used.
+  - For example, `df.groupBy("time").count().withWatermark("time", "1 min")` is invalid in Append output mode.
+]
+
+???
+
+---
+
+class: middle, center, inverse
+name: greetings
+# Thank You!
+### [Kent Yao]
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Attribution-NonCommercial 4.0 International License</a>.
+
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '16:9',
+        slideNumberFormat: 'Slide %current% of %total%',
+        // .. or by using a format function
+        slideNumberFormat: function (current, total) {
+          return ' ' + current + ' of ' + total;
+        },
+        highlightLanguage: 'scala',
+        highlightStyle: 'monokai',
+        highlightLines: true,
+        // arta, ascetic, dark, default, far, github, googlecode, idea, ir-black, magula, monokai, rainbow, solarized-dark, solarized-light, sunburst, tomorrow, tomorrow-night-blue, tomorrow-night-bright, tomorrow-night, tomorrow-night-eighties, vs, zenburn
+        highlightStyle: 'zenburn'
+      });
+    </script>
+  </body>
+</html>
