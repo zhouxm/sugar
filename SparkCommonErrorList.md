@@ -1,3 +1,7 @@
+# Spark Common Error List
+
+
+
 ### 错误类型
 ```scala
 org.apache.spark.shuffle.MetadataFetchFailedException: Missing an output location for shuffle 0
@@ -27,7 +31,9 @@ org.apache.spark.shuffle.MetadataFetchFailedException: Missing an output locatio
 ```
 
 ### 解决方案
-> 
+>
+
+
 ### 错误类型
 ```scala
 org.apache.spark.shuffle.FetchFailedException: Direct buffer memory
@@ -75,6 +81,17 @@ Caused by: java.lang.OutOfMemoryError: Direct buffer memory
 	at io.netty.util.concurrent.DefaultThreadFactory$DefaultRunnableDecorator.run(DefaultThreadFactory.java:144)
 	... 1 more
 ```
-### 解决方案
 
-> https://issues.apache.org/jira/plugins/servlet/mobile#issue/SPARK-13510
+### 解决方案
+> 1. 该问题一般见于Shuffle Read阶段，Spark 基于Netty做RPC通信拉取远端数据，Netty默认用的是DirectByteBuffer内存，当特定条件下使得Client端拉取的Block块过大时，即会出现该错误。
+> 2. 避免数据倾斜
+> 3. 增加partition数量
+>
+>
+>
+>
+>
+> 参考：https://issues.apache.org/jira/browse/SPARK-13510
+
+
+## test
