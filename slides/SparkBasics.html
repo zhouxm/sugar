@@ -1,7 +1,7 @@
 
 <html>
   <head>
-    <title>NetEase Spark Training</title>
+    <title>Spark Basics</title>
     <meta charset="utf-8">
     <style>
       @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
@@ -138,11 +138,8 @@
 
 class: center, middle, inverse
 
-# NetEase Spark Training
+# Spark Basics
 ### [Kent Yao]
-
-???
-大家好！
 
 ---
 
@@ -166,31 +163,10 @@ name: agenda
 
   ** GrahpX ** <br>
 
-  ** Configuration **<br>
+  ** Configurations **<br>
 
   ** Tuning **
 
----
-## Comparing Spark to MR, Why Fast?
-|- | **MR** | **Spark** |
-|:---:|---|---|
-| **  Task Scheduler **| Process | Thread |
-|**Shuffle**||
-
-???
-
-一般来说，Spark比MapReduce运行速度快的原因主要有以下几点：
-
-task启动时间比较快，Spark是fork出线程；而MR是启动一个新的进程；
-更快的shuffles，Spark只有在shuffle的时候才会将数据放在磁盘，而MR却不是。
-更快的工作流：典型的MR工作流是由很多MR作业组成的，他们之间的数据交互需要把数据持久化到磁盘才可以；而Spark支持DAG以及pipelining，在没有遇到shuffle完全可以不把数据缓存到磁盘。
-缓存：虽然目前HDFS也支持缓存，但是一般来说，Spark的缓存功能更加高效，特别是在SparkSQL中，我们可以将数据以列式的形式储存在内存中。
-
----
-
-### Logistic regression in Hadoop and Spark
-
-.center[.bottom[<img src="../imgs/logistic-regression.png" style="zoom:2.0">]]
 
 ---
 
