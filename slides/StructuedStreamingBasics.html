@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>NetEase Spark Training - Spark Structured Streaming</title>
+    <title>Spark Structured Streaming Basics</title>
     <meta charset="utf-8">
     <style>
         @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
@@ -137,15 +137,11 @@
 
 class: center, middle, inverse
 
-# NetEase Spark Training
-## Spark Stuctured Streaming
+# Spark Stuctured Streaming Basics
 ### [Kent Yao]
 
-???
-大家好！
-
 ---
-
+    
 class: inverse, center
 name: agenda
 
@@ -170,40 +166,6 @@ name: agenda
 
   ** Tuning **
 
-
-class:
-name: sparksqldataset
-
-.left-column[
-  ## Spark SQL
-  ### Dataset/DataFrame
-]
-.right-column[
-
-    <img style="zoom: 1.0" src="imgs/rdd.png" />
-]
-
-???
-
-Spark 1.x的RDD更多意义上是一个一维、只有行概念的数据集，比如 RDD[Person]，那么一行就是一个Person，存在内存里也是把 Person 作为一个整体（序列化前的java object，或序列化后的bytes）。
-
-Spark 2.x里，一个 Person 的 Dataset 或 DataFrame，是二维行+列的数据集，比如一行一个 Person，有 name:String, age:Int, height:Double 三列；在内存里的物理结构，也会显式区分列边界。
-Dataset/DataFrame 在 API 使用上有区别：Dataset 相比 DataFrame 而言是 type-safe 的，能够在编译时对 AnalysisExecption 报错（如下图示例）:
-Dataset/DataFrame 存储方式无区别：两者在内存中的存储方式是完全一样的、是按照二维行列（UnsafeRow）来存的，所以在没必要区分 Dataset 或 DataFrame 在 API 层面的差别时，我们统一写作 Dataset/DataFrame
-
----
-
-class:
-name: sparksql
-
-.left-column[
-  ## Spark SQL
-
-
-]
-.right-column[
-<img style="zoom: 0.40" src="imgs/sparksqlcatalyst.png" />
-]
 
 ---
 
