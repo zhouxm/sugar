@@ -10,5 +10,6 @@
 #### Spark
 - [Spark Basics](https://yaooqinn.github.io/sugar/slides/SparkBasics.html#1)  
 - [Spark SQL Basics](https://yaooqinn.github.io/sugar/slides/SparkSQLBasics.html#1)  
-- [Spark Structured Streaming Basics](https://yaooqinn.github.io/sugar/slides/StructuedStreamingBasics.html#1)  
+- [Spark Structured Streaming Basics](https://yaooqinn.github.io/sugar/slides/StructuedStreamingBasics.html#1) 
+- [DataSourceV2 Overview](docs/spark/datasourcev2/1_start_from_the_jira.md) 
 
