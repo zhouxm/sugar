@@ -5,7 +5,7 @@
 
 [spark-authorizer](https://github.com/yaooqinn/spark-authorizer) 提供Spark SQL权限控制能力的插件 [![Build Status](https://travis-ci.org/yaooqinn/spark-authorizer.svg?branch=master)](https://travis-ci.org/yaooqinn/spark-authorizer)
 
-## Kent's Learning & Sharing
+## Learning & Sharing
 
 #### Spark
 - [Spark Basics](https://yaooqinn.github.io/sugar/slides/SparkBasics.html#1)  
